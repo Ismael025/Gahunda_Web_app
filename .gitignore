@@ -1,0 +1,21 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+coverage/
+pubspec.lock
+web/drift_worker.dart.js
+web/sqlite3.version
+web/sqlite3.wasm
+
+# Editors
+.idea/
+.vscode/
+*.iml
+
+# Platform-generated files
+android/.gradle/
+ios/Pods/
+macos/Pods/
