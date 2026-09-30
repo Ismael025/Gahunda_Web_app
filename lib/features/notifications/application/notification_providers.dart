@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../account/application/account_providers.dart';
 import '../../planner/application/planning_providers.dart';
 import '../../planner/data/planning_database.dart';
 import '../data/drift_reminder_source.dart';
@@ -25,7 +27,9 @@ final Provider<DriftReminderSource> reminderSourceProvider =
 
 final Provider<NotificationGateway> notificationGatewayProvider =
     Provider<NotificationGateway>((Ref ref) {
-  return createNotificationGateway();
+  return createNotificationGateway(
+    client: ref.watch(supabaseClientProvider),
+  );
 });
 
 final StateNotifierProvider<NotificationController, NotificationState>
@@ -79,7 +83,10 @@ final class NotificationController extends StateNotifier<NotificationState> {
     }
     return _exactTimingAllowed
         ? '$pending upcoming reminders are scheduled.'
-        : '$pending reminders are scheduled with approximate Android timing.';
+        : kIsWeb
+            ? '$pending reminders are queued for background Web Push. '
+                'The server checks due reminders each minute.'
+            : '$pending reminders are scheduled with approximate Android timing.';
   }
 
   Future<void> initialize() async {
@@ -154,7 +161,9 @@ final class NotificationController extends StateNotifier<NotificationState> {
               ? 'Browser notifications are enabled. Keep Gahunda open for timed reminders.'
               : _exactTimingAllowed
                   ? 'Notifications are enabled.'
-                  : 'Notifications are enabled, but Android may deliver them late until exact alarms are allowed.',
+                  : kIsWeb
+                      ? 'Notifications are enabled. Web reminders can arrive after Gahunda is closed.'
+                      : 'Notifications are enabled, but Android may deliver them late until exact alarms are allowed.',
         ),
       );
       await rebuild();

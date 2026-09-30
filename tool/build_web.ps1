@@ -3,7 +3,10 @@ param(
   [string]$SupabaseUrl,
 
   [Parameter(Mandatory = $true)]
-  [string]$SupabasePublishableKey
+  [string]$SupabasePublishableKey,
+
+  [Parameter(Mandatory = $true)]
+  [string]$WebPushVapidPublicKey
 )
 
 $ErrorActionPreference = 'Stop'
@@ -24,7 +27,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Flutter tests failed.' }
 
 flutter build web --release `
   --dart-define="SUPABASE_URL=$SupabaseUrl" `
-  --dart-define="SUPABASE_PUBLISHABLE_KEY=$SupabasePublishableKey"
+  --dart-define="SUPABASE_PUBLISHABLE_KEY=$SupabasePublishableKey" `
+  --dart-define="WEB_PUSH_VAPID_PUBLIC_KEY=$WebPushVapidPublicKey"
 if ($LASTEXITCODE -ne 0) { throw 'Flutter web release build failed.' }
 
 $BuildRoot = (Resolve-Path .\build\web).Path

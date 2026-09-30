@@ -76,24 +76,9 @@ class _NotificationPanel extends ConsumerWidget {
                 const SizedBox(height: 6),
                 const Text(
                   kIsWeb
-                      ? 'Browser reminders work while Gahunda is open. Your data and core features remain available offline.'
+                      ? 'Web Push delivers reminders after Gahunda is closed. An internet connection is required at delivery time.'
                       : 'Reminders are scheduled on this device and continue to work without an internet connection.',
                 ),
-                if (kIsWeb) ...<Widget>[
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: const Text(
-                      'Important: iPhone background reminders require the '
-                      'separate Web Push server stage. Closing the web app stops '
-                      'timed reminders in this build.',
-                    ),
-                  ),
-                ],
                 const SizedBox(height: 18),
                 _StatusCard(state: state),
                 const SizedBox(height: 14),
@@ -109,7 +94,7 @@ class _NotificationPanel extends ConsumerWidget {
                   _ReminderSwitch(
                     title: 'Scheduled tasks',
                     subtitle: kIsWeb
-                        ? 'Calculated for 5 minutes before start and delivered while Gahunda is open.'
+                        ? 'Queued for 5 minutes before start, including when the installed PWA is closed.'
                         : 'Always exactly 5 minutes before the start time.',
                     value: preferences.taskEnabled,
                     onChanged: (bool value) => unawaited(
